@@ -57,8 +57,7 @@ void Game::ToggleCell(sf::Vector2f pos) {
 	pos.y /= WHEIGHT / GRID_SIZE;
 	int x = int(pos.x);
 	int y = int(pos.y);
-	grid[y][x] = !grid[y][x];
-	oldGrid[y][x] = grid[y][x];
+	oldGrid[y][x] = grid[y][x] = !grid[y][x];
 	UpdateTexture();
 }
 
@@ -88,9 +87,53 @@ void Game::FillScreen() {
 	UpdateTexture();
 }
 
-void Game::SetColorMode(int colorMode){
-	 this->colorMode = colorMode; 
-	 UpdateTexture();
+void Game::SetColorMode(int colorMode) {
+	this->colorMode = colorMode;
+	UpdateTexture();
+}
+
+void Game::addShape(eShapeCode shapeCode, sf::Vector2f pos) {
+	if (pos.x < 0 || pos.x> WWIDTH || pos.y< 0 || pos.y> WHEIGHT)return;
+	pos.x /= WWIDTH / GRID_SIZE;
+	pos.y /= WHEIGHT / GRID_SIZE;
+	int posx = int(pos.x);
+	int posy = int(pos.y);
+
+	switch (shapeCode)
+	{
+	case(glider): {
+		bool glider[3][3] = {
+			{0,1,0},
+			{0,0,1},
+			{1,1,1} };
+		for (int y = posy; y < posy+3; y++) {
+			for (int x = posx; x < posx+ 3; x++) {
+				oldGrid[y % GRID_SIZE][x % GRID_SIZE] = grid[y%GRID_SIZE][x % GRID_SIZE] = glider[y-posy][x-posx];
+			}
+		}
+		break;
+	}
+	case(gliderGun): {
+		bool gliderGun[9][36] = { 
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
+			{0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,1},
+			{1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} };
+		for (int y = posy; y < posy + 9; y++) {
+			for (int x = posx; x < posx + 36; x++) {
+				oldGrid[y % GRID_SIZE][x % GRID_SIZE] = grid[y % GRID_SIZE][x % GRID_SIZE] = gliderGun[y - posy][x - posx];
+			}
+		}
+	}
+	default:
+		break;
+	}
+	UpdateTexture();
 }
 
 void Game::UpdateTexture() {

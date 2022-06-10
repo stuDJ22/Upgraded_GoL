@@ -4,6 +4,8 @@
 #include <list>
 #include "QuadTree.h"
 
+
+enum eShapeCode {glider,gliderGun};
 class Game{
 public:
 	Game();
@@ -13,6 +15,7 @@ public:
 	void FillGrid();
 	void FillScreen();
 	void SetColorMode(int colorMode) ;
+	void addShape(eShapeCode shapeCode,sf::Vector2f pos);
 private:
 	void UpdateTexture();
 	sf::RenderTexture gridTex;

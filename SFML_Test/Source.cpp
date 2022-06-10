@@ -16,11 +16,11 @@ void HandleEvents(sf::Event event, sf::RenderWindow& window, Game* game, sf::Vie
 	if (event.type == sf::Event::KeyReleased) {
 		if (event.key.code == sf::Keyboard::Space)
 			isPressed = false;
-		if (event.key.code == sf::Keyboard::R)
+		else if (event.key.code == sf::Keyboard::R)
 			game->FillGrid();
-		if (event.key.code == sf::Keyboard::Period)
+		else if (event.key.code == sf::Keyboard::Period)
 			game->FillScreen();
-		if (event.key.code >= sf::Keyboard::Num0 && event.key.code <= sf::Keyboard::Num9)
+		else if (event.key.code >= sf::Keyboard::Num0 && event.key.code <= sf::Keyboard::Num9)
 			game->SetColorMode(event.key.code - sf::Keyboard::Num0);
 	}
 
@@ -73,7 +73,15 @@ int main()
 
 		if (pressClock->getElapsedTime().asMilliseconds() > sf::milliseconds(100).asMilliseconds()
 			&& sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			game->ToggleCell(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
+					game->addShape(glider, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+				else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
+					game->addShape(gliderGun, window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+			}
+			else {
+				game->ToggleCell(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
+			}
 			pressClock->restart();
 		}
 
